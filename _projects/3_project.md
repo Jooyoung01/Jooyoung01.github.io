@@ -4,7 +4,7 @@ title: Electric Vehicle Detection Using IR
 description: EV Car Detection Using IR
 img: assets/img/proj_pic/EV_vehicle.jpg
 redirect: '#'
-importance: 4
+importance: 5
 category: Research1
 ---
 

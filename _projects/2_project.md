@@ -3,7 +3,7 @@ layout: page
 title: Homeless Encampment Detection and Counting
 description: Study on Counting the Number and Location of Homeless Encampments in Los Angeles
 img: assets/img/proj_pic/homeless_encampment.png
-importance: 3
+importance: 4
 redirect: '#'
 category: Research1
 ---

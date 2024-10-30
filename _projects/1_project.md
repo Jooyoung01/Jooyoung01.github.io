@@ -3,7 +3,7 @@ layout: page
 title: Truck Detection and Counting
 description: Study on Truck Detection and Counting Using Infrared Cameras
 img: assets/img/proj_pic/truck_detection.png
-importance: 2
+importance: 3
 category: Research1
 ---
 
