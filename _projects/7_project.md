@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Urban Tree Modeling
+title: Road Damage Detection Challenge
 description: Road Damage Detection (ORDDC'2024)
 img: assets/img/proj_pic/orddc01.jpg
 importance: 2
