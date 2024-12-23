@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tank Volume Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 10px;
+      padding: 10px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 100%;
+      margin: auto;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      font-size: 20px;
+      text-align: center;
+    }
+    label {
+      font-weight: bold;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .output {
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #e9e9e9;
+    }
+    .output p {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+    .unit-selection {
+      margin: 10px 0;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    /* 라디오 버튼 숨기기 */
+    .unit-selection input[type="radio"] {
+      display: none;
+    }
+    /* 라벨 스타일 */
+    .unit-selection label {
+      padding: 10px 20px;
+      border: 2px solid #ccc;
+      border-radius: 20px;
+      background-color: #f9f9f9;
+      color: #333;
+      cursor: pointer;
+      font-size: 16px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    /* 선택된 라디오 버튼 스타일 */
+    .unit-selection input[type="radio"]:checked + label {
+      border-color: #ff0000;
+      background-color: #ff3700;
+      color: white;
+    }
+    /* 호버 상태 */
+    .unit-selection label:hover {
+      border-color: #ff6666;
+      background-color: #ffe6e6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Tank Volume Calculator</h1>
+
+    <div class="unit-selection">
+      <input type="radio" id="unit_cm" name="unit" value="cm" checked onchange="calculateVolume()" />
+      <label for="unit_cm">cm</label>
+      <input type="radio" id="unit_m" name="unit" value="m" onchange="calculateVolume()" />
+      <label for="unit_m">m</label>
+    </div>
+
+    <label for="length">L (Length)</label>
+    <input type="number" id="length" step="0.01" placeholder="Enter length" />
+
+    <label for="diameter">D (Diameter)</label>
+    <input type="number" id="diameter" step="0.01" placeholder="Enter diameter" />
+
+    <label for="height">H (Height of Fill)</label>
+    <input type="number" id="height" step="0.01" placeholder="Enter fill height" />
+
+    <button onclick="calculateVolume()">Calculate Volume</button>
+
+    <div class="output">
+      <p><strong>Results:</strong></p>
+      <p>Total Volume: </p>
+      <p>- <span id="totalVolume_l">N/A</span> liters (L)</p>
+      <p>- <span id="totalVolume_gal">N/A</span> gallons (gal)</p>
+      <p>- <span id="totalVolume_m3">N/A</span> m³</p>
+      <p>- <span id="totalVolume_cm">N/A</span> cm³</p>
+      <p>Partial Volume: </p>
+      <p>- <span id="partialVolume_l">N/A</span> liters (L)</p>
+      <p>- <span id="partialVolume_gal">N/A</span> gallons (gal)</p>
+      <p>- <span id="partialVolume_m3">N/A</span> m³</p>
+      <p>- <span id="partialVolume_cm">N/A</span> cm³</p>
+    </div>
+  </div>
+
+  <script>
+    function calculateVolume() {
+      const unit = document.querySelector('input[name="unit"]:checked').value;
+      let length = parseFloat(document.getElementById("length").value);
+      let diameter = parseFloat(document.getElementById("diameter").value);
+      let height = parseFloat(document.getElementById("height").value);
+
+      if (isNaN(length) || isNaN(diameter) || isNaN(height) || height > diameter) {
+        alert("Please enter valid values (H must be less than or equal to D).");
+        return;
+      }
+
+      if (unit === "m") {
+        length *= 100; // Convert meters to centimeters
+        diameter *= 100;
+        height *= 100;
+      }
+
+      const radius = diameter / 2;
+      const totalVolume = Math.PI * Math.pow(radius, 2) * length;
+      const theta = Math.acos((radius - height) / radius);
+      const partialVolume =
+        length *
+        (Math.pow(radius, 2) * theta -
+          (radius - height) *
+            Math.sqrt(2 * radius * height - Math.pow(height, 2)));
+
+      const totalVolume_m3 = totalVolume / 1e6;
+      const totalVolume_l = totalVolume / 1e3;
+      const totalVolume_gal = totalVolume_l / 3.78541;
+
+      const partialVolume_m3 = partialVolume / 1e6;
+      const partialVolume_l = partialVolume / 1e3;
+      const partialVolume_gal = partialVolume_l / 3.78541;
+
+      document.getElementById("totalVolume_m3").textContent = totalVolume_m3.toFixed(2);
+      document.getElementById("totalVolume_l").textContent = totalVolume_l.toFixed(2);
+      document.getElementById("totalVolume_gal").textContent = totalVolume_gal.toFixed(2);
+      document.getElementById("totalVolume_cm").textContent = totalVolume.toFixed(2);
+
+      document.getElementById("partialVolume_m3").textContent = partialVolume_m3.toFixed(2);
+      document.getElementById("partialVolume_l").textContent = partialVolume_l.toFixed(2);
+      document.getElementById("partialVolume_gal").textContent = partialVolume_gal.toFixed(2);
+      document.getElementById("partialVolume_cm").textContent = partialVolume.toFixed(2);
+    }
+  </script>
+</body>
+</html>

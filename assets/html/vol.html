@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Horizontal Cylinder Tank Volume Calculator (cm/m)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      text-align: center;
+    }
+    .input-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    .output, .input-values {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #e9e9e9;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .formula {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f0f8ff;
+    }
+    .canvas-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+    #tankCanvas {
+      border: 1px solid #ccc; 
+      border-radius: 5px;
+      background-color: #ffffff;
+    }
+    .unit-selection, .fill-level-selection {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .unit-selection input, .fill-level-selection button {
+      width: auto;
+    }
+    .fill-level-selection button {
+      flex: 1 1 calc(25% - 10px);
+      padding: 8px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .fill-level-selection button:hover {
+      background-color: #0056b3;
+    }
+    .input-values p, .output p, .formula p {
+      margin: 5px 0;
+    }
+    .fill-level-selection {
+      margin-bottom: 15px;
+    }
+  </style>
+  <style>
+    .sample-image img {
+        width: 60%;
+        height: auto;
+    }
+  </style>    
+  <style>
+    #partialVolume_m3, #partialVolume_l, #partialVolume_gal, #partialVolume_cm {
+      color: rgb(255, 64, 0); /* 글자 색상: 빨간색 */
+      font-size: 1.2em; /* 글자 크기 키우기 (1.2배) */
+      font-weight: bold; /* 굵게 */
+    }
+  </style>
+  <style>
+    /* 기본 라디오 버튼 숨기기 */
+    .styled-radio-group input[type="radio"] {
+      display: none;
+    }
+  
+    /* 라디오 버튼 대체 스타일 */
+    .styled-radio-group label {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 5px;
+      border: 2px solid #ccc;
+      border-radius: 20px;
+      background-color: #f9f9f9;
+      color: #333;
+      cursor: pointer;
+      font-size: 16px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+  
+    /* 활성화 상태 (선택된 라디오 버튼 스타일) */
+    .styled-radio-group input[type="radio"]:checked + label {
+      border-color: #ff0000;
+      background-color: #ff3700;
+      color: white;
+    }
+    /* 호버 상태 */
+    .styled-radio-group label:hover {
+      border-color: #007bff;
+      background-color: #e6f2ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Tank Volume Calculator (단위: cm/m)</h1>
+    <div class="sample-image">
+        <p><strong>Sample Diagram:</strong></p>
+        <img src="https://lh3.googleusercontent.com/fife/ALs6j_GKMCgmhqJb2bFXq5SZM4r4j1jZrSl2jvyeepPYhQxSOSZFfGwEpIokfMky77ZOqcntAq48TqYMRa8c9WS1dNgSCplyk64qhWQJ31P6h22E4Q8tkZXyMu5xcny1QpULBjoduz5EdjZyOc5WRpwv-7SNzvxf0HRuBlwUGjs6LShC8bUX9POwmK2Kq8cKErmCXTKMQcILWPfQqeWXjqnbIPHwM-CuCp28jGFC8ixTpVPrqq_Y1JB2uIS74-X8DA3kgIekPg2emT5Y5hedgOl3PRwpXOY51eok0-x0ouAapgQZ5Ik7BGbPNqFTwA66vH_2Q57FOUGevFkUL2WKOg6jZz8MjdkFUIWocf4hegIbyHv91zwHgLSN66WMXmH4tgsdsI39CtQzqeOa1mCjDWZDOhEY4vZH6a8T6zb1vB7WzzoJK2o09xg1AfAPOsml6dJ8eSIcOt-3MSTSp2B-aHlG3PUZxqxgP0vLDBz46SMaxD35IIOz57pZJONXhLG2vfVUCcxb1R8rKUCvjsnb9qJXO0rkG3xYSfVYrjaC80g2-vQ34Eh3k4FxgXbO5IHE8cdsooWbHJvO3ccFYXupiLVJYM8nHT7GYkfI9yeWwGK8SlmE2XSCbh99xYK6cVnTEv3ZfIlFwH_jEr3CW4Z0xofL6Q1xnHwE8UcE7DQffCMh_6SjF1xj1vI3PK7qEaNTdaMUBH88XY5gQBbLqcROcULFQwhi18m-I5OUYXVvd0kQd33cblr8JA6Q2NdcN6GDrMKPbaixG0gSuDpW8pvhq8kMSxlK1OlnEp1QO8V4WxBeMBswyV98OjdkF19v5FV4-FsjSD1Q2sE0XmhtJ-3dDlcN0sNC0NdcusF8VrzofCptfKSf6zIceB4bKOoDL0M4s01CH2cA72oNoY40g2iryRwbhV5pR_6nD7A5S7u8-wzcB82GRVRYY82kC3a3vHxehLw--QH0OQmPhZEU4Z_aGGOjQQd8Ug0t6JgN-WxWaMSzBWFURS-1X6hO1hnCFuBgywuq-wzNWK6GllJe9PihFz3sgcwu6e8D_Rea8I-Wk_nC2fJxkXR9K2yWpCtTew2aEYjom4c2JIQZYz6oHlW0Mn77xZ1NdGsdfK0bZL_1i4-MCmhTFQqruMZDFEKkGp13P1nwarn9byPIjUg1_nNjhuPL98BIkmMIpDnPAAsVMExcCYLyc0WuTTOiIkHg78grAztuxzoxahhX1WX1tNmnLUPE2Xy_wrv0m_oWFqchSi8vVJk_C2fdnitZFcK-mymHQhbYsTUbJKQj8h8mJ_FdZx_cmSsZWX0j3dsrtPgRQKMPwq1OdPkfq9S6syUNW6oYAGnKmv5D5vo8ojwOH50XI0TAc1zHGuQZFxTAMR72BDfCt0aIJXS8_S3Iaa6IJ3WQfcDQsD7ETliuvcxU8fUsojgD3IxKbAMY37VAbaDgJRNgLWIsUI8k1YuIOUcNtZKLXEeATeZ_ZzMEXjyPwjlwmeku3k9byLFsHdmdwsWMxH3UpfNlX4Sa_q3BenuH7dr0Yqtv025Q6uu8v_xvwIDNo2M3vLUJb6h9t-5MkzMdeUfm9NG0BaH428EO8zxAnEUH8Dmz2oMcG-aSMv4m8BFz-sOjNA=w2488-h1424" alt="Horizontal Tank Diagram">
+    </div>
+    <div class="input-group">
+      <label>단위 선택:</label>
+      <div class="styled-radio-group">
+        <input type="radio" id="unit_cm" name="unit" value="cm" checked>
+        <label for="unit_cm">cm</label>
+        <input type="radio" id="unit_m" name="unit" value="m">
+        <label for="unit_m">m</label>
+      </div>
+      <!-- <div class="unit-selection">
+        <input type="radio" id="unit_cm" name="unit" value="cm" checked>
+        <label for="unit_cm">cm</label>
+        <input type="radio" id="unit_m" name="unit" value="m">
+        <label for="unit_m">m</label>
+      </div> -->
+    </div>
+    <!-- <div class="input-group">
+        <label for="length">L (길이)</label>
+        <input type="number" id="length" step="0.01" placeholder="길이를 입력">
+      </div> -->
+    <div class="input-group">
+    <p id="errorMessage" style="color: red; display: none; font-weight: bold; margin-bottom: 5px;"></p> <!-- 오류 메시지 -->
+    <label for="length">L (길이)</label>
+    <input type="number" id="length" step="0.01" placeholder="길이를 입력">
+    </div>
+      
+    <div class="input-group">
+      <label for="diameter">D (원통높이_직경)</label>
+      <input type="number" id="diameter" step="0.01" placeholder="직경을 입력">
+    </div>
+
+    <div class="input-group">
+      <label for="height">H (채워진 높이)</label>
+      <input type="number" id="height" step="0.01" placeholder="높이를 입력">
+    </div>
+
+
+
+    <div class="input-group">
+      <label>Fill Level Selection (8등분):</label>
+      <div class="fill-level-selection">
+        <button onclick="setFillLevel(8/8)">Full (8/8)</button>
+        <button onclick="setFillLevel(7/8)">7/8</button>
+        <button onclick="setFillLevel(6/8)">6/8</button>
+        <button onclick="setFillLevel(5/8)">5/8</button>
+        <button onclick="setFillLevel(4/8)">4/8</button>
+        <button onclick="setFillLevel(3/8)">3/8</button>
+        <button onclick="setFillLevel(2/8)">2/8</button>
+        <button onclick="setFillLevel(1/8)">1/8</button>
+      </div>
+    </div>
+
+    <button onclick="calculateVolume()">Calculate Volume</button>
+
+    <div class="input-values">
+      <p><strong>입력값:</strong></p>
+      <p>L (길이): <span id="inputLengthDisplay">N/A</span></p>
+      <p>D (원통높이): <span id="inputDiameterDisplay">N/A</span></p>
+      <p>H (채워진 높이): <span id="inputHeightDisplay">N/A</span></p>
+    </div>
+
+    <div class="output">
+      <p>
+        <strong>Partial Volume (H 높이 만큼 채워진 물의 양):</strong><br>
+        <span id="partialVolume_l">N/A</span> liters (L)<br>
+        <span id="partialVolume_gal">N/A</span> gallons (gal)<br>
+        <span id="partialVolume_m3">N/A</span> m³<br>
+        <span id="partialVolume_cm">N/A</span> cm³
+      </p>
+      <p>
+        <strong>Total Volume (총 부피):</strong><br>
+        <span id="totalVolume_l">N/A</span> liters (L)<br>
+        <span id="totalVolume_gal">N/A</span> gallons (gal)<br>
+        <span id="totalVolume_m3">N/A</span> m³<br>
+        <span id="totalVolume_cm">N/A</span> cm³
+      </p>
+    </div>
+
+    <div class="formula">
+      <p><strong>Calculation Formula:</strong></p>
+      <p><em>Partial Volume (cm³):</em> V<sub>partial</sub> = L × [R² × cos<sup>-1</sup>((R - H)/R) − (R - H) × √(2RH − H²)]</p>
+      <p id="partialFormula">Input: V<sub>partial</sub> = L × [R² × cos<sup>-1</sup>((R - H)/R) − (R - H) × √(2RH − H²)]</p>
+      <p>Calculation Result: V<sub>partial</sub> = <span id="partialFormulaResult">N/A</span>=<span id="partialVolume_l_result">N/A</span></p>
+
+      <p><em>Total Volume (cm³):</em> V<sub>total</sub> = π × R² × L</p>
+      <p id="totalFormula">Input: V<sub>total</sub> = π × (R)² × L</p>
+      <p>Calculation Result: V<sub>total</sub> = <span id="totalFormulaResult">N/A</span>=<span id="totalVolume_l_result">N/A</span></p>
+    </div>
+
+    <div class="canvas-container">
+      <p><strong>2D Tank Section (단면도):</strong></p>
+      <canvas id="tankCanvas" width="450" height="300">
+        Your browser does not support the HTML5 canvas tag.
+      </canvas>
+    </div>
+  </div>
+
+  <script>
+    // 이벤트 리스너 추가: 단위 변경 시 자동 계산
+    document.querySelectorAll('input[name="unit"]').forEach((elem) => {
+      elem.addEventListener('change', () => {
+        calculateVolume();
+      });
+    });
+
+    // 채워진 높이 선택 버튼 클릭 시 H 설정
+    function setFillLevel(fraction) {
+      const diameterInput = parseFloat(document.getElementById("diameter").value);
+      const unit = document.querySelector('input[name="unit"]:checked').value;
+
+      if (isNaN(diameterInput) || diameterInput <= 0) {
+        alert("먼저 유효한 직경(D)을 입력하세요.");
+        return;
+      }
+
+      // H 계산: H = fraction * D
+      let H = fraction * diameterInput;
+
+      // 단위 변환: m -> cm
+      if (unit === 'm') {
+        H *= 100;
+      }
+
+      // H 값을 입력 필드에 설정
+      document.getElementById("height").value = (unit === 'm') ? (H / 100).toFixed(2) : H.toFixed(2);
+
+      // 계산 수행
+      calculateVolume();
+    }
+
+    // function calculateVolume() {
+    //   // 단위 선택
+    //   const unit = document.querySelector('input[name="unit"]:checked').value;
+
+    //   // 입력값 가져오기
+    //   let diameterInput = parseFloat(document.getElementById("diameter").value);
+    //   let heightInput = parseFloat(document.getElementById("height").value);
+    //   let lengthInput = parseFloat(document.getElementById("length").value);
+
+    //   // 유효성 체크
+    //   if (
+    //     isNaN(diameterInput) || isNaN(heightInput) || isNaN(lengthInput) ||
+    //     diameterInput <= 0 || heightInput <= 0 || lengthInput <= 0 ||
+    //     heightInput > diameterInput
+    //   ) {
+    //     alert(
+    //       "Diameter가 Height보다 커야 합니다. L, D, H 모두 입력해주세요."
+    //     );
+    //     return;
+    //   }
+
+    //   // 단위 변환: m -> cm
+    //   let diameter = diameterInput;
+    //   let height = heightInput;
+    //   let length = lengthInput;
+    //   let displayUnit = 'cm';
+
+    //   if (unit === 'm') {
+    //     diameter *= 100;
+    //     height *= 100;
+    //     length *= 100;
+    //     displayUnit = 'm';
+    //   }
+
+    //   // radius는 cm 단위
+    //   const radius = diameter / 2;
+
+    //   // 총 부피(원통 전체 부피) [cm³]
+    //   const totalVolume = Math.PI * Math.pow(radius, 2) * length;
+
+    //   // 부분 부피 [cm³] 계산
+    //   const theta = Math.acos((radius - height) / radius);
+    //   const partialVolume =
+    //     length *
+    //     (Math.pow(radius, 2) * theta -
+    //       (radius - height) *
+    //         Math.sqrt(2 * radius * height - Math.pow(height, 2)));
+
+    //   // 단위 변환
+    //   const totalVolume_m3 = totalVolume / 1e6;
+    //   const totalVolume_l = totalVolume / 1e3;
+    //   const totalVolume_gal = totalVolume_l / 3.78541;
+
+    //   const partialVolume_m3 = partialVolume / 1e6;
+    //   const partialVolume_l = partialVolume / 1e3;
+    //   const partialVolume_gal = partialVolume_l / 3.78541;
+
+    //   // 숫자 포맷팅 함수
+    //   function formatNumber(number, decimals = 2) {
+    //     return number.toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+    //   }
+
+    //   // HTML 표시
+    //   document.getElementById("totalVolume_cm").innerHTML = formatNumber(totalVolume, 2);
+    //   document.getElementById("totalVolume_m3").innerHTML = formatNumber(totalVolume_m3, 2);
+    //   document.getElementById("totalVolume_l").innerHTML = formatNumber(totalVolume_l, 2);
+    //   document.getElementById("totalVolume_gal").innerHTML = formatNumber(totalVolume_gal, 2);
+
+    //   document.getElementById("partialVolume_cm").innerHTML = formatNumber(partialVolume, 2);
+    //   document.getElementById("partialVolume_m3").innerHTML = formatNumber(partialVolume_m3, 2);
+    //   document.getElementById("partialVolume_l").innerHTML = formatNumber(partialVolume_l, 2);
+    //   document.getElementById("partialVolume_gal").innerHTML = formatNumber(partialVolume_gal, 2);
+
+    //   // 입력값 표시 업데이트
+    //   document.getElementById("inputDiameterDisplay").innerHTML = `${formatNumber(diameterInput, 2)} ${unit}`;
+    //   document.getElementById("inputHeightDisplay").innerHTML = `${formatNumber(heightInput, 2)} ${unit}`;
+    //   document.getElementById("inputLengthDisplay").innerHTML = `${formatNumber(lengthInput, 2)} ${unit}`;
+
+    //   // 포뮬러 표시
+    //   document.getElementById("totalFormula").innerHTML = 
+    //     `Input: V<sub>total</sub> = π × (${formatNumber(radius, 2)})² × ${formatNumber(length, 2)}`;
+    //   document.getElementById("partialFormula").innerHTML = 
+    //     `Input: V<sub>partial</sub> = ${formatNumber(length, 2)} × [(${formatNumber(radius, 2)})² × cos<sup>-1</sup>((${formatNumber(radius, 2)} - ${formatNumber(height, 2)})/${formatNumber(radius, 2)}) - (${formatNumber(radius, 2)} - ${formatNumber(height, 2)}) × √(2 × ${formatNumber(radius, 2)} × ${formatNumber(height, 2)} - ${formatNumber(height, 2)}²)]`;
+
+    //   // 계산 결과 표시
+    //   document.getElementById("totalFormulaResult").innerHTML = `${formatNumber(totalVolume, 2)} cm³`;
+    //   document.getElementById("totalVolume_l_result").innerHTML = `${formatNumber(totalVolume_l, 2)} L`;
+    //   document.getElementById("partialFormulaResult").innerHTML = `${formatNumber(partialVolume, 2)} cm³`;
+    //   document.getElementById("partialVolume_l_result").innerHTML = `${formatNumber(partialVolume_l, 2)} L`;
+
+    //   // 캔버스에 2D 그림 갱신
+    //   drawTank(diameter, height, unit);
+    // }
+    function calculateVolume() {
+  // 오류 메시지 요소 가져오기
+  const errorMessage = document.getElementById("errorMessage");
+
+  // 단위 선택
+  const unit = document.querySelector('input[name="unit"]:checked').value;
+
+  // 입력값 가져오기
+  let diameterInput = parseFloat(document.getElementById("diameter").value);
+  let heightInput = parseFloat(document.getElementById("height").value);
+  let lengthInput = parseFloat(document.getElementById("length").value);
+
+  // 유효성 체크
+  if (
+    isNaN(diameterInput) || isNaN(heightInput) || isNaN(lengthInput) ||
+    diameterInput <= 0 || heightInput <= 0 || lengthInput <= 0 ||
+    heightInput > diameterInput
+  ) {
+    // 오류 메시지 표시
+    errorMessage.style.display = "block";
+    errorMessage.textContent = "L(Length), D(Diameter), H(Height) 모두 입력해주세요. D는 H보다 커야 합니다.";
+    return; // 오류가 있으면 계산 중단
+  }
+
+  // 오류가 없으면 메시지 숨기기
+  errorMessage.style.display = "none";
+
+  // 단위 변환: m -> cm
+  let diameter = diameterInput;
+  let height = heightInput;
+  let length = lengthInput;
+  let displayUnit = 'cm';
+
+  if (unit === 'm') {
+    diameter *= 100;
+    height *= 100;
+    length *= 100;
+    displayUnit = 'm';
+  }
+
+  // 나머지 계산 로직
+  const radius = diameter / 2;
+  const totalVolume = Math.PI * Math.pow(radius, 2) * length;
+
+  const theta = Math.acos((radius - height) / radius);
+  const partialVolume =
+    length *
+    (Math.pow(radius, 2) * theta -
+      (radius - height) *
+        Math.sqrt(2 * radius * height - Math.pow(height, 2)));
+
+  const totalVolume_m3 = totalVolume / 1e6;
+  const totalVolume_l = totalVolume / 1e3;
+  const totalVolume_gal = totalVolume_l / 3.78541;
+
+  const partialVolume_m3 = partialVolume / 1e6;
+  const partialVolume_l = partialVolume / 1e3;
+  const partialVolume_gal = partialVolume_l / 3.78541;
+
+  function formatNumber(number, decimals = 2) {
+    return number.toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  }
+
+  document.getElementById("totalVolume_cm").innerHTML = formatNumber(totalVolume, 2);
+  document.getElementById("totalVolume_m3").innerHTML = formatNumber(totalVolume_m3, 2);
+  document.getElementById("totalVolume_l").innerHTML = formatNumber(totalVolume_l, 2);
+  document.getElementById("totalVolume_gal").innerHTML = formatNumber(totalVolume_gal, 2);
+
+  document.getElementById("partialVolume_cm").innerHTML = formatNumber(partialVolume, 2);
+  document.getElementById("partialVolume_m3").innerHTML = formatNumber(partialVolume_m3, 2);
+  document.getElementById("partialVolume_l").innerHTML = formatNumber(partialVolume_l, 2);
+  document.getElementById("partialVolume_gal").innerHTML = formatNumber(partialVolume_gal, 2);
+
+  document.getElementById("inputDiameterDisplay").innerHTML = `${formatNumber(diameterInput, 2)} ${unit}`;
+  document.getElementById("inputHeightDisplay").innerHTML = `${formatNumber(heightInput, 2)} ${unit}`;
+  document.getElementById("inputLengthDisplay").innerHTML = `${formatNumber(lengthInput, 2)} ${unit}`;
+
+  document.getElementById("totalFormula").innerHTML = 
+    `Input: V<sub>total</sub> = π × (${formatNumber(radius, 2)})² × ${formatNumber(length, 2)}`;
+  document.getElementById("partialFormula").innerHTML = 
+    `Input: V<sub>partial</sub> = ${formatNumber(length, 2)} × [(${formatNumber(radius, 2)})² × cos<sup>-1</sup>((${formatNumber(radius, 2)} - ${formatNumber(height, 2)})/${formatNumber(radius, 2)}) - (${formatNumber(radius, 2)} - ${formatNumber(height, 2)}) × √(2 × ${formatNumber(radius, 2)} × ${formatNumber(height, 2)} - ${formatNumber(height, 2)}²)]`;
+
+  document.getElementById("totalFormulaResult").innerHTML = `${formatNumber(totalVolume, 2)} cm³`;
+  document.getElementById("totalVolume_l_result").innerHTML = `${formatNumber(totalVolume_l, 2)} L`;
+  document.getElementById("partialFormulaResult").innerHTML = `${formatNumber(partialVolume, 2)} cm³`;
+  document.getElementById("partialVolume_l_result").innerHTML = `${formatNumber(partialVolume_l, 2)} L`;
+
+  drawTank(diameter, height, unit);
+}
+
+    /**
+     * 2D로 가로로 놓인 원통 단면을 그리는 함수
+     * @param {number} diameter - 탱크 직경 (cm)
+     * @param {number} height - 채워진 높이 (cm)
+     * @param {string} unit - 'cm' 또는 'm'
+     */
+    function drawTank(diameter, height, unit) {
+      const canvas = document.getElementById("tankCanvas");
+      const ctx = canvas.getContext("2d");
+
+      // 캔버스 초기화
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // (1) 탱크를 그릴 수 있는 최대 공간에 맞춰 자동 스케일 계산
+      //     원의 직경(diameter)이 canvas 폭/높이보다 크지 않도록 맞춤
+      const margin = 20; // 가장자리 여백
+      const maxCircleSize = Math.min(canvas.width, canvas.height) - 2 * margin;
+      // 직경(diameter) : maxCircleSize(px) = 1 : scale
+      // => scale = maxCircleSize / diameter (px/cm)
+      const scale = maxCircleSize / diameter;
+
+      // (2) 원의 반지름(픽셀)과 중심점 설정
+      const rPixels = (diameter * scale) / 2;
+      const cx = canvas.width / 2; // 중앙(가로)
+      const cy = canvas.height / 2; // 중앙(세로)
+
+      // (3) 탱크(원) 외곽선 그리기
+      ctx.beginPath();
+      ctx.arc(cx, cy, rPixels, 0, 2 * Math.PI);
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.closePath();
+
+      // (4) 물 높이를 픽셀로 환산
+      const waterHeightPx = height * scale;
+      // 탱크 아래쪽(원 하단)은 cy + rPixels
+      let waterTopY = cy + rPixels - waterHeightPx;
+      // 범위 보정 (혹시 입력이 이상할 때 대비)
+      if (waterTopY < cy - rPixels) {
+        waterTopY = cy - rPixels; // 탱크가 완전히 가득 찬 경우
+      } else if (waterTopY > cy + rPixels) {
+        waterTopY = cy + rPixels; // 탱크가 비어있는 경우
+      }
+
+      // (5) 파란색 물 채우기
+      ctx.save();
+      // 원 내부만 그리기 위해 clip
+      ctx.beginPath();
+      ctx.arc(cx, cy, rPixels, 0, 2 * Math.PI);
+      ctx.closePath();
+      ctx.clip();
+
+      // 물 색상
+      ctx.fillStyle = "lightblue";
+      // waterTopY부터 캔버스 맨 아래까지 채우기
+      ctx.fillRect(0, waterTopY, canvas.width, canvas.height - waterTopY);
+
+      ctx.restore();
+
+      // (6) 텍스트로 D와 H 표시하기
+      ctx.font = "14px Arial";
+      ctx.fillStyle = "black";
+
+      // 단위 선택
+      const displayUnit = unit;
+
+      // 직경 표시: (cx-rPixels-50, cy-rPixels+20)에 "D = ... cm" 또는 "D = ... m"
+      const diameterDisplay = (unit === 'm') ? `${(diameter / 100).toFixed(2)} m` : `${diameter.toFixed(2)} cm`;
+      const dLabel = `D = ${diameterDisplay}`;
+      ctx.fillText(dLabel, cx - rPixels - 50, cy - rPixels + 20);
+
+      // 채워진 높이 표시: 물의 상단(waterTopY) ~ 바닥(cy+rPixels) 중앙쯤에 텍스트
+      const heightDisplay = (unit === 'm') ? `${(height / 100).toFixed(2)} m` : `${height.toFixed(2)} cm`;
+      const midY = (waterTopY + (cy + rPixels)) / 2;
+      const hLabel = `H = ${heightDisplay}`;
+      ctx.fillText(hLabel, cx + rPixels + 10, midY);
+    }
+
+    // 초기 계산 실행 (선택된 단위가 cm이므로)
+    window.onload = () => {
+      calculateVolume();
+    };
+  </script>
+</body>
+</html>
