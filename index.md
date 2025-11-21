@@ -13,8 +13,3 @@ My research focuses on ``Simulation, Spatial Computing, and Computer Vision``, a
 I aim to better understand how people and cities behave across space and time by developing computational approaches grounded in AI, spatial data, and visual information. Before beginning my PhD, I worked across robotics, computer vision, and spatial data science—experiences that shaped my interest in connecting human behavior, environments, and large-scale data.
 
 I am broadly interested in building data-driven systems for urban understanding, complex environment analysis, and next-generation AI simulations.
-
-
-{% include_relative _includes/publications.md %}
-
-{% include_relative _includes/services.md %}
