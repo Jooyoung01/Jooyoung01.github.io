@@ -5,8 +5,7 @@ layout: homepage
 ## About Me
 
 I am a **PhD student in Computer Science at Emory University**  
-(<a href="https://computerscience.emory.edu/graduate-phd/index.html" target="_blank">Computer Science PhD Program</a>),  
-advised by <a href="https://www.joonseok.org/" target="_blank">Dr. Joon-Seok Kim</a>.
+(<a href="https://computerscience.emory.edu/graduate-phd/index.html" target="_blank">Computer Science PhD Program</a>), advised by <a href="https://www.joonseok.org/" target="_blank">Dr. Joon-Seok Kim</a>.
 
 My research focuses on ``Simulation, Spatial Computing, and Computer Vision``, and I work on topics involving **generative agents**, **geospatial data**, **spatiotemporal representations**, and **foundation models**.
 
